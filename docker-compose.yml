@@ -1,0 +1,12 @@
+services:
+  generator:
+    tty: true # Enables debugging capabilities when attached to this container.
+    build:
+      context: .
+      # args:
+      #   PROJECT_NAME: ${PROJECT_NAME}
+    container_name: "go_gen"
+    volumes:
+      - .:/go_project/src/app
+    # command: ["tail", "-f", "/dev/null"]
+    command: ["sleep", "infinity"] # to keep container alive
