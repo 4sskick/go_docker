@@ -57,6 +57,15 @@
 
    - The resulting executable will be located within your project directory inside the container.
 
+**Recommended build && run**
+
+The method will using Dev Container which is an Extension
+
+- open command `ctrl + shift + p` and type `Dev Containers Add dev container configuration file`
+- choose `Add Configuration to user data folder` and choose `From docker-compose.yml`
+- vscode will proceed the necessary setup and config
+- after some times vscode will run the container on defined image from docker compose file
+
 **Next(?)**
 
     - Installing Modules or Frameworks:
