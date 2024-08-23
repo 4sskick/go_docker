@@ -1,28 +1,68 @@
-build image
-if wanna passing the argument
-`docker-compose -f <docker compose file yml> build --build-arg "PROJECT_NAME=go-docker" --no-cache`
-and on docker-compose file uncomment the args under build section
-and on Dockerfile file uncomment the ARGS
+**Conditional Build with Arguments**
 
-otherwise just run as usual
-`docker-compose -f <docker compose file yml> build`
+1. **For Build with Arguments:**
 
-because container is always running, use able to go inside the container by command
-`docker exec -it go_gen sh`
+   - Set the `PROJECT_NAME` argument to your desired project name (e.g., `go-docker`).
+   - Run the following command:
 
-<!-- or (recomended)
-`docker-compose run --rm generator sh -c "go version && go mod init example.com/go-test"`
-above 2 commands will create container then execute bash command, after that removed -->
+     ```bash
+     docker-compose -f <docker-compose.yml> build --build-arg "PROJECT_NAME=go-docker" --no-cache
+     ```
 
-run command
-`go mod init <ex: example.com/go-test or whatever project you want>`
+   - This will:
+     - Uncomment the `args` section under the `build` section in your `docker-compose.yml` file.
+     - Uncomment the `ARG` directive in your `Dockerfile`.
+     - Build the image with the specified `PROJECT_NAME`.
+     - Use `--no-cache` to force a rebuild from scratch (optional).
 
-the command will generate the `go.mod` file and reflected into local folder
+2. **For Build without Arguments (Standard Build):**
 
-doing build on executable file
-because container is built under linux, when run `go build` will produce compiled file which only run by `arc` os by default
-if wanna produce compiled file which able to run by `windows` os
+   ```bash
+   docker-compose -f <docker-compose.yml> build
+   ```
 
-<!-- `docker-compose run --rm generator sh -c "GOOD=windows GOARCH=amd64 go build"` -->
+   - This will build the image using the default settings in your `docker-compose.yml` file.
 
-`GOOD=windows GOARCH=amd64 go build`
+**Accessing the Container and Initializing Go Project**
+
+1. **Enter the Container Shell:**
+
+   ```bash
+   docker exec -it go_gen sh  # Assuming your container name is "go_gen"
+   ```
+
+2. **Initialize Go Project:**
+
+   ```bash
+   go mod init <project-name>  # Replace "<project-name>" with your desired name (e.g., example.com/go-test [invalid URL removed])
+   ```
+
+   - This creates the `go.mod` file within the container, which will be reflected in your local directory (if volume mounts are configured).
+
+**Building Cross-Platform Executable**
+
+1. **Set Build Environment:**
+
+   ```bash
+   GOOD=windows GOARCH=amd64
+   ```
+
+   - This specifies that you want to build a Windows-compatible executable using the 64-bit architecture.
+
+2. **Build the Executable:**
+
+   ```bash
+   go build  # This will create an executable suitable for Windows
+   ```
+
+   - The resulting executable will be located within your project directory inside the container.
+
+**Next(?)**
+
+    - Installing Modules or Frameworks:
+        - Use go get commands within the container to install dependencies.
+        - Consider containerizing dependencies for a more portable approach.
+
+    - Integrating with Database Service Container:
+        - Define your database service in the `docker-compose.yml` file.
+        - Set environment variables or use service discovery mechanisms to connect from your Go application to the database container.
